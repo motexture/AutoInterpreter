@@ -43,7 +43,7 @@ class Models:
                 "\n- Include actions that require an API key unless the objective explicitly specifies it."
                 "\n- Require human intervention."
                 "\n- Require human intervention to create file(s)."
-                "\n- Create file(s) only if explicitly requested by the task."
+                "\n- Create file(s) unless requested by the task; otherwise, provide the Python code without creating any file(s)."
                 "\n\nYour instructions should always:"
                 "\n- Ensure all actions can be executed within a Python script."
                 "\n- Provide detailed explanations of each step to ensure clarity and comprehension."
