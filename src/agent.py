@@ -74,7 +74,7 @@ class Agent:
                     break
 
                 # Get output
-                self.instructions = self.models.inference("instructor", self.input, GREEN, RESET, self.config['model']['model_context_length'])
+                self.instructions = self.models.inference("instructor", self.output, GREEN, RESET, self.config['model']['model_context_length'])
                 self.output = self.output + "\nInstruction: " + self.instructions
             # Finish program
             if finished:
