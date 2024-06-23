@@ -14,4 +14,4 @@ run:
   python_env: "python3"
   code_execution_timeout: 18
   memories_to_remember: 5
-  objective: "Create a python function that prints Hello World!"
+  objective: "Create a Python function that prints Hello World!"
