@@ -1,5 +1,5 @@
 api:
-  base_url: "http://192.168.68.115:1234/v1"
+  base_url: "http://localhost:1234/v1"
   api_key: "lm-studio"
 model:
   model: ""
@@ -14,4 +14,4 @@ run:
   python_env: "python3"
   code_execution_timeout: 18
   memories_to_remember: 5
-  objective: "Using the Actions class inference method, pass to it the full html code of https://fanpage.it/ with the instruction 'Extract all titles of the articles separated by comma:' appended at the end in a new line, pass it as a prompt and print the result."
+  objective: "Create a python function that prints Hello World!"
