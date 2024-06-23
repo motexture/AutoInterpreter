@@ -12,6 +12,6 @@ database:
   path: "memory.db"
 run:
   python_env: "python3"
-  code_execution_timeout: 18
+  code_execution_timeout: 320
   memories_to_remember: 5
   objective: "Create a Python function that prints Hello World!"
