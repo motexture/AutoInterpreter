@@ -73,7 +73,6 @@ class Models:
                 "\nYour message should start directly with ```python"
                 "\n# Your Python code should be inside this code snippet."
                 "\n\n```"
-                "\nFinish like this."
                 "\nYou are not allowed to do anything else besides writing Python code."
             )
         }
