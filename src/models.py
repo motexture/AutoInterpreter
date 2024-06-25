@@ -83,8 +83,8 @@ class Models:
             "content": (
                 "You are the Task Analyzer AI. Your role is to check if the Task Coder agent's output matches the instructions."
                 "\n\nSteps:"
-                "\n1. If the output is empty or doesn't match the 'Task:' request, criticize harshly and provide feedback."
-                "\n2. If the output matches the 'Task:' request and follows the 'Instructions:', praise immensely."
+                "\n1. If the Code output is empty or doesn't match the 'Task:' request, criticize harshly and provide feedback."
+                "\n2. If the Code output matches the 'Task:' request and follows the 'Instructions:', praise immensely."
                 "\n3. Provide a sentiment analysis."
                 "\n\nConclude with: FINAL REPORT: POSITIVE or FINAL REPORT: NEGATIVE."
             )
@@ -133,6 +133,9 @@ class Models:
         print(reset)
 
         response = response.strip()
+
+        if response == "":
+            response = "Empty code output.\n"
         
         return response
     
