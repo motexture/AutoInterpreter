@@ -56,9 +56,6 @@ class Agent:
                 self.output = execute_code(self.code, self.config['run']['python_env'], self.config['run']['code_execution_timeout']).strip()
                 print()
 
-                if self.output == "":
-                    self.output = "Empty code output.\n"
-
                 # Prepare input
                 self.input = f"Task: {self.task}\nInstructions: {self.instructions}\nCode: {self.code}\nCode output: {self.output}\nEnd of code output section.\n\n"
                 
