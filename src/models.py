@@ -98,7 +98,8 @@ class Models:
                 "\n6. If multiple import errors are present, make suggestions on how to fix them."
                 "\n7. If the output aligns with the 'Task:' request and there are no errors in the output, praise the Task Instructor agent immensely and act extremely happy."
                 "\n\nKey points to consider:"
-                "\n- The positive and negative criticism is required because a Sentiment Analysis agent needs to understand if the task has been successfully completed or not. Take this into consideration."
+                "\n- The positive and negative criticism is required because a Sentiment Analysis agent needs to understand if the task has been successfully completed or not. Take this into consideration.",
+                "\n- Please conclude your analysis by clearly stating whether the findings are positive or negative. Use the format: FINAL REPORT: POSITIVE or FINAL REPORT: NEGATIVE."
             )
         }
 
