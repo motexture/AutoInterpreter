@@ -41,7 +41,7 @@ class Agent:
 
             # Get output and generate embeddings
             self.instructions = self.models.inference("instructor", self.input, GREEN, RESET, self.config['model']['model_context_length'])
-            self.output = f"{self.input}\nInstructions: {self.instructions}\nEnd of instructions section\n\n"
+            self.output = f"{self.input}\nInstructions: {self.instructions}\nEnd of instructions section.\n\n"
 
             # Task loop
             finished = False
@@ -57,12 +57,11 @@ class Agent:
                 print()
 
                 if self.output == "":
-                    self.output = "Empty code output\n"
+                    self.output = "Empty code output.\n"
 
                 # Prepare input
                 self.input = f"Task: {self.task}\nInstructions: {self.instructions}\nCode: {self.code}\nCode output: {self.output}\nEnd of code output section.\n\n"
                 
-
                 # Get analysis
                 self.analysis = self.models.inference("analyzer", self.input, MAGENTA, RESET, self.config['model']['model_context_length'])
 
