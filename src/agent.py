@@ -56,7 +56,7 @@ class Agent:
                 self.output = execute_code(self.code, self.config['run']['python_env'], self.config['run']['code_execution_timeout']).strip()
                 print()
 
-                if self.output == "" or len(self.output) < 12:
+                if self.output == "" or len(self.output) < 32:
                     self.output = "Code execution failed\n"
 
                 # Prepare input
