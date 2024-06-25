@@ -41,7 +41,7 @@ class Agent:
 
             # Get output and generate embeddings
             self.instructions = self.models.inference("instructor", self.input, GREEN, RESET, self.config['model']['model_context_length'])
-            self.output = f"{self.input}\nInstructions: {self.instructions}\n\n"
+            self.output = f"{self.input}\nInstructions: {self.instructions}\nEnd of instructions section\n\n"
 
             # Task loop
             finished = False
@@ -57,13 +57,13 @@ class Agent:
                 print()
 
                 # Prepare input
-                self.input = f"Task: {self.task}\nInstructions: {self.instructions}\nCode: {self.code}\nCode output: {self.output}\n\n"
+                self.input = f"Task: {self.task}\nInstructions: {self.instructions}\nCode: {self.code}\nCode output: {self.output}\nEnd of code output section.\n\n"
 
                 # Get analysis
                 self.analysis = self.models.inference("analyzer", self.input, MAGENTA, RESET, self.config['model']['model_context_length'])
 
                 # Get output and generate embeddings
-                self.output = f"{self.input}\nAnalysis: {self.analysis}\n\n"
+                self.output = f"{self.input}\nAnalysis: {self.analysis}\nEnd of analysis section.\n\n"
 
                 # Save to memory
                 self.memory.memorize(self.output)
@@ -75,7 +75,7 @@ class Agent:
 
                 # Get output
                 self.instructions = self.models.inference("instructor", self.output, GREEN, RESET, self.config['model']['model_context_length'])
-                self.output = self.output + "\nInstruction: " + self.instructions + "\n\n"
+                self.output = self.output + "\nInstruction: " + self.instructions + "\nEnd of instructions section.\n\n"
             # Finish program
             if finished:
                 break
