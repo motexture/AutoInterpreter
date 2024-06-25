@@ -9,7 +9,7 @@ class Memory:
     def _initialize_db(self):
         try:
             os.remove(self.path)
-        except FileNotFoundError:
+        except:
             pass
 
         self.conn = sqlite3.connect(self.path)
