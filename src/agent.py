@@ -69,7 +69,7 @@ class Agent:
                 self.memory.memorize(self.output)
 
                 # Analyze output
-                if self.models.classify(self.analysis, 4):
+                if self.models.classify(self.analysis, 3):
                     finished = True
                     break
 
