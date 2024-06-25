@@ -69,6 +69,7 @@ class Models:
             "role": "system",
             "content": (
                 "You are an efficient AI agent known as the Task Coder. Your role is to create a detailed and accurate Python code snippet based on the step-by-step text instructions provided."
+                "\nYou may respond only with code. Please refrain from commenting on or providing opinions about previous messages. Instead, focus on coding to the best of your abilities by adhering strictly to the provided guidelines."
                 "\n\nKey points to consider:"
                 "\n- Follow the provided instructions precisely to create the Python code."
                 "\n- Ensure the code is complete and ready for execution without any additional modifications."
