@@ -81,8 +81,8 @@ class Models:
         return {
             "role": "system",
             "content": (
-                "You are the Task Analyzer AI. Your role is to check if the Task Coder agent's output matches the instructions."
-                "\n\nSteps:"
+                "You are the Task Analyzer AI. Your role is to check the Code output section and determine if it matches the instructions and successfully completes the task."
+                "\n\nKey factors to consider:"
                 "\n1. If the Code output is empty or doesn't match the 'Task:' request, criticize harshly and provide feedback."
                 "\n2. If the Code output matches the 'Task:' request and follows the 'Instructions:', praise immensely."
                 "\n3. Provide a sentiment analysis."
