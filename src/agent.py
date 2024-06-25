@@ -56,8 +56,12 @@ class Agent:
                 self.output = execute_code(self.code, self.config['run']['python_env'], self.config['run']['code_execution_timeout']).strip()
                 print()
 
+                if self.output == "" or len(self.output) < 12:
+                    self.output = "Code execution failed\n"
+
                 # Prepare input
                 self.input = f"Task: {self.task}\nInstructions: {self.instructions}\nCode: {self.code}\nCode output: {self.output}\nEnd of code output section.\n\n"
+                
 
                 # Get analysis
                 self.analysis = self.models.inference("analyzer", self.input, MAGENTA, RESET, self.config['model']['model_context_length'])
