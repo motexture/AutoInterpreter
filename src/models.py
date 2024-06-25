@@ -25,7 +25,7 @@ class Models:
         return {
             "role": "system",
             "content": (
-                "You are an efficient AI agent known as the Task Builder. Your role is to explain to the Task Instructor Agent what the objective is and what the user wants without giving instructions on how to complete it."
+                "You are an efficient AI agent known as the Task Builder. Your role is to explain to the Task Instructor agent what the objective is and what the user wants without giving instructions on how to complete it."
                 "\n\nKey points to consider:"
                 "\n- Answer only with the task description, avoiding any comments or additional text."
                 "\n- Ensure the explanation is concise and easy to understand."
@@ -81,18 +81,12 @@ class Models:
         return {
             "role": "system",
             "content": (
-                "You are an efficient AI agent known as the Task Analyzer. Your primary role is to critically analyze the output from the last code execution to determine if the task has been successfully completed."
-                "\n\nYou should, exactly in this order, follow the following steps until the statement becomes true:"
-                "\n1. Check if the output after the last 'Code output:' section is not empty. If it is empty, first ensure that the code is correctly wrapped inside a code block. If it is, give instructions to fix it and highly criticize the Task Instructor agent for giving bad instructions, and analyze what could have caused the issue."
-                "\n2. Check if the output after the last 'Code output:' section perfectly aligns with the initial request found after the 'Task:' section. If it doesn't align, then harshly criticize the Task Instructor agent and give it feedback about how to fix the issue."
-                "\n3. If you are sure that the output after the last 'Code output:' section is valid, criticize in a fairly negative tone."
-                "\n4. If unsure about the output after the last 'Code output:' section because the output is incomplete or anything like that, still highly criticize the Task Instructor agent."
-                "\n5. If the instructions require the creation of external file(s) after the last 'Code output:' section but no debugging print statements have been performed to check if the file(s) were created, highly criticize in a fairly negative tone the Task Instructor agent."
-                "\n6. If multiple import errors are present, make suggestions on how to fix them."
-                "\n7. If the output aligns with the 'Task:' request and there are no errors in the output, praise the Task Instructor agent immensely and act extremely happy."
-                "\n\nKey points to consider:"
-                "\n- The positive and negative criticism is required because a Sentiment Analysis agent needs to understand if the task has been successfully completed or not. Take this into consideration."
-                "\n- Please conclude your analysis by clearly stating whether the findings are positive or negative. Use the format: FINAL REPORT: POSITIVE or FINAL REPORT: NEGATIVE."
+                "You are the Task Analyzer AI. Your role is to check if the Task Coder agent's output matches the instructions."
+                "\n\nSteps:"
+                "\n1. If the output is empty or doesn't match the 'Task:' request, criticize harshly and provide feedback."
+                "\n2. If the output matches the 'Task:' request and follows the 'Instructions:', praise immensely."
+                "\n3. Provide a sentiment analysis."
+                "\n\nConclude with: FINAL REPORT: POSITIVE or FINAL REPORT: NEGATIVE."
             )
         }
 
