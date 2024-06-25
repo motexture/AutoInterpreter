@@ -124,7 +124,7 @@ class Models:
 
         prompt = [system]
         prompt.append(
-            {"content": f"{text}", "role": "user"},
+            {"content": f"{str(text)}", "role": "user"},
         )
 
         completion = self.client.chat.completions.create(
