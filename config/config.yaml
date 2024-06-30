@@ -4,14 +4,14 @@ api:
 model:
   model: ""
   model_context_length: 8192
-  temperature: 0.3
+  temperature: 0.7
   classifier: "nlptown/bert-base-multilingual-uncased-sentiment"
   classifier_context_length: 512
-  device: "mps"
+  device: "cpu"
 database:
   path: "memory.db"
 run:
-  python_env: "python3"
-  code_execution_timeout: 320
-  memories_to_remember: 5
-  objective: "Create a Python function that prints Hello World!"
+  python_env: "python"
+  code_execution_timeout: 64
+  memories_to_remember: 3
+  objective: "Write Python code that performs a sort algorithm and that it prints the result and also writes the code on a txt file'"

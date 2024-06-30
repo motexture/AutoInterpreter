@@ -1,16 +1,17 @@
 import torch
 import ssl
+import re
 
-from typing import List, Dict
+from typing import Dict, List
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from openai import OpenAI
-from sentence_transformers import SentenceTransformer
 
+import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
-TOKEN_TO_WORD_RATIO = 1.33  # Approximate ratio of tokens to words for English text
-SAFETY_MARGIN = 1.2  # Safety margin to ensure we stay within the token limit
-    
+TOKEN_TO_WORD_RATIO = 1.33
+SAFETY_MARGIN = 1.2
+
 class Models:
     def __init__(self, config):
         self.client = OpenAI(base_url=config['api']['base_url'], api_key=config['api']['api_key'])
@@ -25,42 +26,34 @@ class Models:
         return {
             "role": "system",
             "content": (
-                "You are an efficient AI agent known as the Task Builder. Your role is to explain to the Task Instructor agent what the objective is and what the user wants without giving instructions on how to complete it."
-                "\n\nKey points to consider:"
-                "\n- Answer only with the task description, avoiding any comments or additional text."
+                "You are an extremely smart AI agent known as the Task Builder. Your role is to explain to the Task Instructor agent what the user wants."
                 "\n- Ensure the explanation is concise and easy to understand."
-                "\n- Avoid giving instructions on how to solve it."
-                "\n\nYour objective is to generate a clear, one-paragraph explanation that effectively communicates the objective and user requirements to the Task Instructor Agent. Ensure the explanation is straightforward and free of unnecessary information."
+                "\n- Avoid at all costs giving instructions on how to solve it."
+                "\n- Start with 'The user wants' words."
+                "\n- Do not exceed one-two paragraphs."
+                "\n- Include links if relevant."
             )
         }
-    
+
     def get_task_instructor_system_prompt(self) -> Dict[str, str]:
         return {
             "role": "system",
             "content": (
-                "You are an efficient AI agent known as the Task Instructor. Your role is to provide exhaustive step-by-step text instructions to help a Task Coder agent create Python code that will be executed immediately to complete a specified task."
-                "\n\nYour instructions should never:"
-                "\n- Include actions that require an API key unless the objective explicitly specifies it."
-                "\n- Require human intervention."
-                "\n- Create file(s) unless requested by the task; otherwise, provide the Python code without creating any file(s)."
-                "\n- After writing the step-by-step instructions, do not provide the complete code at the end."
-                "\n\nYour instructions should always:"
-                "\n- Ensure all actions can be executed within a Python script."
-                "\n- Provide detailed explanations of each step to ensure clarity and comprehension."
-                "\n- Ensure that the script prints appropriate outputs to the console to aid in debugging the code."
-                "\n- Ensure that any file creation, deletion, or modification is performed within the Python script."
-                "\n- Clearly instruct the Task Coder agent to add print statements for each step and ensure that files created have content and are not empty."
+                "You are an extremely smart AI agent known as the Task Instructor. Your role is to analyze the previous content and provide exhaustive step-by-step instructions to help a Task Coder agent create Python code that will be executed immediately to complete the task itself."
+                "\n\nImportant points:"
+                "\n- If any, learn from past instructions and mistakes to improve your current instructions."
+                "\n- Never include libraries that require an API key unless the task explicitly requires it."
+                "\n- Never instruct to write code that may require human intervention such as requiring inputs or completing pieces of code."
+                "\n- Provide the Task Coder agent detailed instructions for installing necessary packages with commands like `os.system('pip3 install requests --quiet')` before the imports."
+                "\n- Instruct the Task Coder agent to write detailed and comprehensive code."
+                "\n- Instruct the Task Coder agent to add appropriate print statements to the console to aid in debugging."
+                "\n- Instruct the Task Coder agent to always check the content resulting from the creation, deletion, or modification of files performed within the Python script."
                 "\n- Refer to the following code snippet for tasks involving an NLP model, such as summarization, content creation, or content analysis:"
                 "\n```python"
-                "\nfrom src.actions import Actions # This is a local class, do not install it with pip"
+                "\nfrom src.actions import Actions # This is a local class, do not install it with pip."
                 "\nactions = Actions()"
-                "\noutput = actions.inference('Summarize the following text: ' + content) # Ensure to concatenate variables if required"
+                "\noutput = actions.inference('Summarize the following text: ' + content) # Ensure to concatenate variables if required."
                 "\n```"
-                "\n- Provide detailed instructions for installing necessary packages with commands like `os.system('pip3 install requests --quiet')` before the imports."
-                "\n- Be comprehensive and thorough, covering every necessary detail."
-                "\n- Be precise and unambiguous, leaving no room for interpretation."
-                "\n- Be organized in a logical sequence, ensuring a smooth workflow."
-                "\n- Be actionable and direct, enabling the Task Coder to execute without additional clarifications."
             )
         }
 
@@ -68,12 +61,13 @@ class Models:
         return {
             "role": "system",
             "content": (
-                "You are an efficient AI agent known as the Task Coder. Your role is to create a detailed and accurate Python code snippet based on the step-by-step text instructions provided."
-                "\nYou may respond only with code. Absolutely refrain from commenting on or providing opinions about previous messages. Instead, focus on coding to the best of your abilities by adhering strictly to the provided guidelines."
+                "You are an extremely smart AI agent known as the Task Coder. Your role is to create only Python code based on the previous content and instructions."
+                "\nYou shall only write Python code."
+                "\nYou shall write the code inside a single code block."
                 "\nYour message should start directly with ```python"
-                "\n# Your Python code should be inside this code snippet."
-                "\n\n```"
-                "\n\nDo not write anything besides Python code."
+                "\n# Your Python code should be inside this code block."
+                "\n```"
+                "\nYou are not allowed to write comments, opinions, or explanations either before or after the code block."
             )
         }
 
@@ -81,13 +75,8 @@ class Models:
         return {
             "role": "system",
             "content": (
-                "You are the Task Analyzer AI. Your role is to check the Code output section and determine if it successfully completes the task."
-                "\n\nKey factors to consider:"
-                "\n- Ignore the instructions, just focus on the 'Code:' and 'Code output:' sections."
-                "\n- If the Code output is empty or doesn't match the 'Task:' request, criticize harshly and provide feedback."
-                "\n- If the Code output matches the 'Task:' request and follows the 'Instructions:', praise immensely."
-                "\n- Provide a sentiment analysis."
-                "\n\nConclude with: FINAL REPORT: POSITIVE or FINAL REPORT: NEGATIVE."
+                "You are an advanced AI agent named Task Analyzer AI. Your role is to evaluate the output from the code execution found inside the '[OUTPUT][/OUTPUT]' tags and determine if it meets the task requirements. "
+                "If the output meets the task requirements, respond only with 'POSITIVE'; if it does not, respond only with 'NEGATIVE'."
             )
         }
 
@@ -127,22 +116,18 @@ class Models:
         try:
             for chunk in completion:
                 if chunk.choices[0].delta.content:
-                    print(chunk.choices[0].delta.content, end="", flush=True)
-                    response += chunk.choices[0].delta.content
+                    content = chunk.choices[0].delta.content
+                    print(content, end="", flush=True)
+                    response += content
         except Exception as e:
             print(f"Error: {e}")
         print(reset)
 
-        response = response.strip()
+        return response.strip()
 
-        if response == "":
-            response = "Empty code output.\n"
-        
-        return response
-    
-    def classify(self, input: str, treshold: int) -> bool:
+    def classify(self, input: str, threshold: int) -> bool:
         inputs = self.tokenizer(input, return_tensors="pt", truncation=True, padding=True, max_length=self.classifier_max_seq_length).to(self.device)
         with torch.no_grad():
             logits = self.classifier(**inputs).logits
         predicted_class_id = logits.argmax().item()
-        return True if predicted_class_id >= treshold else False
+        return True if predicted_class_id >= threshold else False

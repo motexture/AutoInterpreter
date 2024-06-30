@@ -19,7 +19,6 @@ class Memory:
         self.conn.commit()
 
     def memorize(self, text: str):
-        text = text.replace("\n", "")
         self.c.execute("INSERT INTO operations (text) VALUES (?)", (text,))
         self.conn.commit()
 
@@ -30,4 +29,4 @@ class Memory:
         rows = self.c.fetchall()
         rows.sort(key=lambda x: x[0], reverse=True)
 
-        return '\n\n'.join(row[1] for row in rows)
+        return '\n\n'.join(row[1].strip() for row in rows)

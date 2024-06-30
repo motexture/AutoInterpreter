@@ -3,9 +3,12 @@ import re
 import threading
 
 def extract_code_blocks(text: str) -> str:
-    code_blocks = re.findall(r'```[a-zA-Z]*\n(.*?)(```|$)', text, re.DOTALL)
-    combined_code = '\n'.join(block[0].strip() for block in code_blocks)
-    return combined_code
+    code_blocks = re.findall(r'```(?:[a-zA-Z]*\n)?(.*?)(?=```|\Z)', text, re.DOTALL)
+    combined_code = '\n'.join(block.strip() for block in code_blocks)
+    filtered_code = '\n'.join(
+        line for line in combined_code.split('\n') if not re.match(r'^\s*$', line)
+    )
+    return filtered_code
 
 def execute_code(code, python_env, timeout=360):
     def read_output(process, output_list):
@@ -45,19 +48,19 @@ def execute_code(code, python_env, timeout=360):
             process.kill()
             stdout_thread.join()
             stderr_thread.join()
-            return "The code execution exceeded the timeout period."
+            return '*** Code execution output: \n\n' + 'Process terminated due to timeout\n\n'
         
         if stdout_lines:
-            return ''.join(stdout_lines).strip()
+            return '*** Code execution output: \n\n' + ''.join(stdout_lines).strip() + '\n\n'
         elif stderr_lines:
-            return ''.join(stderr_lines).strip()
+            return '*** Code execution output: \n\n' + ''.join(stderr_lines).strip() + '\n\n'
         else:
-            return "The code executed successfully but produced no output."
+            return '*** Code execution output: \n\n' + 'Empty output from code execution\n\n'
     except subprocess.TimeoutExpired:
         process.kill()
         stdout_thread.join()
         stderr_thread.join()
-        return "The code execution exceeded the timeout period."
+        return '*** Code execution output: \n\n' + 'Process terminated due to timeout\n\n'
     except Exception as e:
         process.kill()
-        return f"An error occurred: {e}"
+        return f'*** Code execution output: \n\n' + str(e) + '\n\n'

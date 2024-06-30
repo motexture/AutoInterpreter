@@ -27,55 +27,62 @@ class Agent:
         self.models = Models(self.config)
 
     def run(self):
+        try:
+            os.remove("debug.txt")
+        except:
+            pass
+
+        # Init database
         self.memory._initialize_db()
         
+        # Set input for Task Builder
+        self.input = self.objective
+
+        # Get output and generate embeddings
+        self.task = self.models.inference("builder", self.input, BLUE, RESET, self.config['model']['model_context_length'])
+
+        # Get output and generate embeddings
+        self.instructions = self.models.inference("instructor", self.task, GREEN, RESET, self.config['model']['model_context_length'])
+
+        # Prepare input  
+        self.input = f"{self.task}\n\n{self.instructions}"
+
+        # Task loop
         while True:
-            # Set input for Task Builder
-            self.input = f"{self.output}\nObjective: {self.objective}\n\n"
+            # Extract code block
+            self.code_input = extract_code_blocks(self.models.inference("coder", self.input, YELLOW, RESET, self.config['model']['model_context_length'])).strip()
 
-            # Get output and generate embeddings
-            self.task = self.models.inference("builder", self.input, BLUE, RESET, self.config['model']['model_context_length'])
+            # Execute code block
+            self.code_output = execute_code(self.code_input, self.config['run']['python_env'], self.config['run']['code_execution_timeout'])
+            
+            # Prepare input
+            self.input = f"{self.input}\n\n{self.code_input}\n\n{self.code_output}"
 
-            # Set input for Task Instructor
-            self.input = f"Task: {self.task}\n\n"
+            # Get analysis
+            self.analysis = f"{self.task}\n\n{self.code_output}"
+            self.analysis = self.models.inference('analyzer', self.analysis, MAGENTA, RESET, self.config['model']['model_context_length'])
 
-            # Get output and generate embeddings
-            self.instructions = self.models.inference("instructor", self.input, GREEN, RESET, self.config['model']['model_context_length'])
-            self.output = f"{self.input}\nInstructions: {self.instructions}\nEnd of instructions section.\n\n"
+            # Finalize and prepare input
+            self.input = f"{self.input}\n\n{self.analysis}\n\n"
 
-            # Task loop
-            finished = False
-            while True:
-                self.input = f"{self.memory.remember(self.config['run']['memories_to_remember'])}\n{self.output}"
+            try:
+                with open('debug.txt', 'a') as file:
+                    file.write(self.input)
+            except:
+                pass
 
-                # Get code output
-                self.code = extract_code_blocks(self.models.inference("coder", self.input, YELLOW, RESET, self.config['model']['model_context_length']))
-                
-                # Execute code and print it
-                print(f"> ", end="")
-                self.output = execute_code(self.code, self.config['run']['python_env'], self.config['run']['code_execution_timeout']).strip()
-                print()
+            # Save to memory
+            self.memory.memorize(self.input)
 
-                # Prepare input
-                self.input = f"Task: {self.task}\nInstructions: {self.instructions}\nCode: {self.code}\nCode output: {self.output}\nEnd of code output section.\n\n"
-                
-                # Get analysis
-                self.analysis = self.models.inference("analyzer", self.input, MAGENTA, RESET, self.config['model']['model_context_length'])
-
-                # Get output and generate embeddings
-                self.output = f"{self.input}\nAnalysis: {self.analysis}\nEnd of analysis section.\n\n"
-
-                # Save to memory
-                self.memory.memorize(self.output)
-
-                # Analyze output
-                if self.models.classify(self.analysis, 3):
-                    finished = True
-                    break
-
-                # Get output
-                self.instructions = self.models.inference("instructor", self.output, GREEN, RESET, self.config['model']['model_context_length'])
-                self.output = self.output + "\nInstruction: " + self.instructions + "\nEnd of instructions section.\n\n"
-            # Finish program
-            if finished:
+            # Analyze output
+            if self.models.classify(self.analysis, 3):
                 break
+            
+            # Remember memories
+            self.input = f"{self.memory.remember(self.config['run']['memories_to_remember'])}\n\n{self.task}"
+
+            # Set instructrions
+            self.instructions = self.models.inference('instructor', self.input, GREEN, RESET, self.config['model']['model_context_length'])
+
+            # Set input for next run
+            self.input = f"{self.input}\n\n{self.instructions}"
