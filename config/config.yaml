@@ -14,4 +14,4 @@ run:
   python_env: "python"
   code_execution_timeout: 64
   memories_to_remember: 3
-  objective: "Write Python code that performs a sort algorithm and that it prints the result and also writes the code on a txt file'"
+  objective: "Write Python code that prints 'Hello, World''"

@@ -59,7 +59,7 @@ class Agent:
             self.input = f"{self.input}\n\n{self.code_input}\n\n{self.code_output}"
 
             # Get analysis
-            self.analysis = f"{self.task}\n\n{self.code_output}"
+            self.analysis = f"{self.task}\n\n[OUTPUT]{self.code_output}\n\n[/OUTPUT]"
             self.analysis = self.models.inference('analyzer', self.analysis, MAGENTA, RESET, self.config['model']['model_context_length'])
 
             # Finalize and prepare input
