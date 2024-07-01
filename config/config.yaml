@@ -14,4 +14,5 @@ run:
   python_env: "python"
   code_execution_timeout: 64
   memories_to_remember: 3
-  objective: "Write Python code that prints 'Hello, World''"
+  manual_analysis: False
+  objective: "Get the latest news from ansa.it"
