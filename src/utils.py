@@ -7,7 +7,7 @@ def extract_code_blocks(text: str) -> str:
     combined_code = '\n'.join(block.strip() for block in code_blocks)
     filtered_code = '\n'.join(
         line for line in combined_code.split('\n') if not re.match(r'^\s*$', line)
-    )
+    ).strip()
     return filtered_code
 
 def execute_code(code, python_env, timeout=360):
