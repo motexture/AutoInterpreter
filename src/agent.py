@@ -81,8 +81,9 @@ class Agent:
             self.memory.memorize(self.input)
 
             # Analyze output
-            if self.models.classify(self.analysis, 3):
-                break
+            if self.config['run']['manual_analysis'] == False:
+                if self.models.classify(self.analysis, 3):
+                    break
             
             # Remember memories
             self.input = f"{self.memory.remember(self.config['run']['memories_to_remember'])}\n\n{self.task}"
