@@ -59,8 +59,14 @@ class Agent:
             self.input = f"{self.input}\n\n{self.code_input}\n\n{self.code_output}"
 
             # Get analysis
-            self.analysis = f"{self.task}\n\n[OUTPUT]{self.code_output}\n\n[/OUTPUT]"
-            self.analysis = self.models.inference('analyzer', self.analysis, MAGENTA, RESET, self.config['model']['model_context_length'])
+            if self.config['run']['manual_analysis'] == True:
+                if input("> Is the result 'positive' or 'negative'?: ").lower() == "positive":
+                    break
+                else:
+                    self.analysis = input("> Enter an analysis for next iteration: ")
+            else:
+                self.analysis = f"{self.task}\n\n[OUTPUT]{self.code_output}\n\n[/OUTPUT]"
+                self.analysis = self.models.inference('analyzer', self.analysis, MAGENTA, RESET, self.config['model']['model_context_length'])
 
             # Finalize and prepare input
             self.input = f"{self.input}\n\n{self.analysis}\n\n"
