@@ -3,7 +3,7 @@ import re
 import threading
 
 def extract_code_blocks(text: str) -> str:
-    code_blocks = re.findall(r'```(?:[a-zA-Z]*\n)?(.*?)(?=```|\Z)', text, re.DOTALL)
+    code_blocks = re.findall(r'```(?:[a-zA-Z]*\n)?(.*?)(?:```|$)', text, re.DOTALL)
     combined_code = '\n'.join(block.strip() for block in code_blocks)
     filtered_code = '\n'.join(
         line for line in combined_code.split('\n') if not re.match(r'^\s*$', line)
