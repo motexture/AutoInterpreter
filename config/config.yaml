@@ -15,4 +15,4 @@ run:
   code_execution_timeout: 64
   memories_to_remember: 3
   manual_analysis: False
-  objective: "Get the latest news from ansa.it"
+  objective: "Write a python function that prints 'Hello, World!'"
