@@ -11,7 +11,7 @@ model:
 database:
   path: "memory.db"
 run:
-  python_env: "python"
+  python_env: "python3"
   code_execution_timeout: 64
   memories_to_remember: 3
   manual_analysis: False
