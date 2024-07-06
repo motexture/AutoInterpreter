@@ -7,7 +7,7 @@ model:
   temperature: 0.7
   classifier: "nlptown/bert-base-multilingual-uncased-sentiment"
   classifier_context_length: 512
-  device: "cpu"
+  device: "cuda"
 database:
   path: "memory.db"
 run:
