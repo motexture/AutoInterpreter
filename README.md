@@ -26,5 +26,5 @@ AutoInterpreter was created as a side project and is currently unable to perform
 
 5. **Run the project**
    ```bash
-   python src/main.py
+   python -m src.main
    ```
