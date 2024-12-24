@@ -1,6 +1,5 @@
 import torch
 import ssl
-import re
 
 from typing import Dict, List
 from transformers import AutoTokenizer, AutoModelForSequenceClassification

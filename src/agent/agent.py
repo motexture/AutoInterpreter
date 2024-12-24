@@ -1,9 +1,9 @@
 import os
 import yaml
 
-from .models import Models
+from ..models.models import Models
 from .memory import Memory
-from .utils import extract_code_blocks, execute_code
+from ..utilities.utils import extract_code_blocks, execute_code
 
 # Colors
 RED = "\033[31m"

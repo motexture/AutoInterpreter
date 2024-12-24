@@ -1,6 +1,6 @@
 api:
-  base_url: "http://localhost:1234/v1"
-  api_key: "lm-studio"
+  base_url: "http://192.168.1.120:1234/v1"
+  api_key: ""
 model:
   model: ""
   model_context_length: 8192
