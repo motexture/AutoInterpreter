@@ -1,8 +1,8 @@
 api:
   base_url: "http://192.168.1.120:1234/v1"
-  api_key: ""
+  api_key: "lm-studio"
 model:
-  model: ""
+  model: "llama-3.2-3b-instruct"
   model_context_length: 8192
   temperature: 0.7
   classifier: "nlptown/bert-base-multilingual-uncased-sentiment"
