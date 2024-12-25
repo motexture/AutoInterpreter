@@ -49,9 +49,13 @@ class Models:
                 "\n- Instruct the Task Coder agent to always check the content resulting from the creation, deletion, or modification of files performed within the Python script."
                 "\n- Refer to the following code snippet for tasks involving an NLP model, such as summarization, content creation, or content analysis:"
                 "\n```python"
-                "\nfrom src.actions import Actions # This is a local class, do not install it with pip."
+                "\nfrom src.agent.actions import Actions # This is a local class, do not install it with pip."
                 "\nactions = Actions()"
+                "\n# Examples"
+                "\n# Summarize"
                 "\noutput = actions.inference('Summarize the following text: ' + content) # Ensure to concatenate variables if required."
+                "\n# Create article"
+                "\noutput = actions.inference('Create an article about cooking')"
                 "\n```"
             )
         }

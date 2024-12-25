@@ -56,11 +56,13 @@ def execute_code(code, python_env, timeout=360):
             return '*** Code execution output: \n\n' + ''.join(stderr_lines).strip() + '\n\n'
         else:
             return '*** Code execution output: \n\n' + 'Empty output from code execution\n\n'
-    except subprocess.TimeoutExpired:
+    except subprocess.TimeoutExpired as e:
+        print(e)
         process.kill()
         stdout_thread.join()
         stderr_thread.join()
         return '*** Code execution output: \n\n' + 'Process terminated due to timeout\n\n'
     except Exception as e:
+        print(e)
         process.kill()
         return f'*** Code execution output: \n\n' + str(e) + '\n\n'
